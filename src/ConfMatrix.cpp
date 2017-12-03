@@ -29,7 +29,8 @@ ConfMatrix::ConfMatrix(bool **sensors,int *n_sensors,int *n_neurons){
 				id = randomInt(this->n_sensors);
 				id = bitmap[id] ? -1 : id;
 			}
-
+			bitmap[id] = true;
+			
 			lines[i].v.push_back(sensors[id]);
 		}
 	}
@@ -46,6 +47,10 @@ int ConfMatrix::getNneurons(){
 
 int ConfMatrix::getNreceptors(){
 	return this->n_receptors;
+}
+
+M *ConfMatrix::getLines(){
+	return this->lines;
 }
 
 void ConfMatrix::printSensorsValue(){

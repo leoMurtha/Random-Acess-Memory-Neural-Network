@@ -26,8 +26,8 @@ class ConfMatrix{
 		int getNsensors();
 		int getNneurons();
 		int getNreceptors();
-		
-	
+		M *getLines();
+
 };
 
 #endif

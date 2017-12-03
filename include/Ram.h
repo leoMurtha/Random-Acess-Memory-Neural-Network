@@ -15,10 +15,9 @@ class Ram{
 
 	public:
 		Ram();
-		Ram(ConfMatrix);
+		Ram(ConfMatrix, int);
 		//~Ram();
-		void connectStoR(bool*); /* Connect sensors to receptors */
-
+		
 	
 };
 

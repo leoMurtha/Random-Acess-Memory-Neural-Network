@@ -10,10 +10,13 @@
 Wizard::Wizard(){}
 
 Wizard::Wizard(int n_sensors, int n_neurons, int n_receptors){
-	neuron = (Neuron*)calloc(this->n_neurons,sizeof(Neuron));
-
+	this->n_sensors = n_sensors;
+	this->n_neurons = n_neurons;
 	this->n_receptors = n_receptors;
 
+	neuron = (Neuron*)calloc(this->n_neurons,sizeof(Neuron));
+
+	
 	/* Creating the wizards neurons */
 	for(int i = 0; i < this->n_neurons; i++){
 		neuron[i] = Neuron(this->n_receptors);
@@ -26,6 +29,7 @@ void Wizard::connectStoR(M *lines){
 	
 	for(int i = 0; i < n_neurons; i++){
 		neuron[i].setReceptor(lines[i].v);
+		printf("----->Neuron [%d] \n", i);
 		neuron[i].printNeuron();
 	}
 }

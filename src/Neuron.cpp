@@ -35,12 +35,14 @@ bool Neuron::getChromoAt(){
 }
 
 void Neuron::setReceptor(vector<bool*> sensors){
-	for(int i =0; i < n_receptors; i++){
-		receptor[i] = sensors[i]; /* Saving the adresses */
-	}
+	this->receptor = sensors;
+	
+	//for(int i =0; i < n_receptors; i++){
+	//	receptor[i] = sensors[i]; /* Saving the adresses */
+	//}
 }
 
 
 void Neuron::printNeuron(){
-	for(int i = 0; i < n ; i++) printf("In:[%d]\tOut:[%d]\n",i,chromo[i]);
+	for(int i = 0; i < n ; i++) printf("In:[%d %d %d %d]\tOut:[%d]\n",(*receptor[0]),(*receptor[1]),(*receptor[2]),(*receptor[3]),chromo[i]);
 }

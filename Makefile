@@ -1,5 +1,5 @@
 all:
-	@g++ -o main src/main.cpp src/Neuron.cpp src/Helper.cpp src/Wizard.cpp src/ConfMatrix.cpp -I./include -g -Wall -lm
+	@g++ -o main src/main.cpp src/Neuron.cpp src/Helper.cpp src/Wizard.cpp src/ConfMatrix.cpp src/Ram.cpp -I./include -g -Wall -lm
 run:
 	@./main
 frun:
