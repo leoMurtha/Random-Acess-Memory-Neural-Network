@@ -1,7 +1,7 @@
 #ifndef _NEURON_H_
 #define _NEURON_H_
 
-using namespace std;
+using namespace std;	
 #include <vector>
 
 /* bool*chromo = NEURON DNA */

@@ -19,7 +19,7 @@ class Wizard{
 		Wizard(int,int,int); /* Uses nsensor,nneurons and nreceptors*/
 		//~Wizard();
 		void connectStoR(M*); /* Connect sensors to receptors */
-
+		int adder(); /* adds the adressed locs */
 };
 
 #endif

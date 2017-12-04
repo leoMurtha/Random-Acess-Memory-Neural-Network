@@ -1,7 +1,7 @@
 all:
-	@g++ -o main src/main.cpp src/Neuron.cpp src/Helper.cpp src/Wizard.cpp src/ConfMatrix.cpp -I./include -g -Wall -lm
+	@g++ -o AG src/AG.cpp src/TicTacToe.cpp src/Neuron.cpp src/Helper.cpp src/Wizard.cpp src/ConfMatrix.cpp src/Ind.cpp src/Ram.cpp -I./include -g -Wall -lm
 run:
-	@./main
+	@./AG
 frun:
-	@valgrind -v --track-origins=yes --leak-check=full --show-leak-kinds=all ./main
+	@valgrind -v --track-origins=yes --leak-check=full --show-leak-kinds=all ./AG
 	
