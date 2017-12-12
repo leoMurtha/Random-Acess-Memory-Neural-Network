@@ -6,6 +6,14 @@
 
 ConfMatrix::ConfMatrix(){};
 
+ConfMatrix::~ConfMatrix(){
+	//for(int i = 0; i < this->n_neurons; i++){
+	//	free(lines[i].ids);
+	//}
+
+	//free(lines);
+};
+
 ConfMatrix::ConfMatrix(bool **sensors,int *n_sensors,int *n_neurons){
 	while(((*n_sensors) % (*n_neurons))){
 		printf("ERROR: Number of neurons is not proportional to the number of sensors.\n");
@@ -19,7 +27,6 @@ ConfMatrix::ConfMatrix(bool **sensors,int *n_sensors,int *n_neurons){
 
 	/* Vec of bool pointers */
 	lines = (M*)calloc(this->n_neurons,sizeof(M));
-
 
 	bool bitmap[this->n_sensors] = {0};
 	for(int i = 0; i < this->n_neurons; i++){

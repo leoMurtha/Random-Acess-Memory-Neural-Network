@@ -15,9 +15,11 @@ class Ind{
 		//~Ind();
 		int choice();
 		void add2Fitness(float);
+		void setFitness(float);		
 		float getFitness();
 		int getId();
 		void setId();
+		Ram* getBrain();
 
 };
 

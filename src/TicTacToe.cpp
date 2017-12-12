@@ -6,60 +6,137 @@
 #include <Ind.h>
 using namespace std;
 
+
 char square[10] = {'o','1','2','3','4','5','6','7','8','9'};
 
 int checkwin();
 void board();
 
 /* Runs the game routine */
-bool game(vector<Ind> p, bool **sensor, int n_sensors, unsigned int secs){
+bool tictactoe(vector<Ind*> p, vector<bool*> sensor, int n_sensors, float ms){
+	int player = 0,i,choice = 0;
+	char mark;
+	float elapsed_secs = 0;
+
+	for(int j = 0 ; j < n_sensors; j++) sensor[0][j] = sensor[1][j] = 0; /* Zeroing sensor */
+	
+	//printf("TICCC\n");
+	clock_t begin = clock();
+
+	do{
+		//board()
+
+		//printf("Player [%d]: Choose a valid position in the board.\n", (player+1));
+		choice = (*p[player]).choice();
+		//n = 0;
+		//	scanf("%d",&n);
+
+		
+		mark = (!player) ? 'X' : 'O'; 
+
+		if(isdigit(square[choice])){
+			(*p[player]).add2Fitness(24);			
+			square[choice] = mark;
+			sensor[player][choice] = true;
+			player++;
+			player %= 2;
+			sensor[player][8+choice] = true;
+		}
+		else{
+			
+			(*p[player]).add2Fitness(-36);			
+			
+			//printf("Player [%d] choice %d\n", (player+1),choice);
+
+			//cout<<"Invalid move \n";
+
+			//printf("->%d\n", 17+choice);
+			sensor[player][17+choice] = true;
+			
+			
+		}
+		i=checkwin();
+		clock_t end = clock();
+  		elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+		
+	}while((elapsed_secs <= ms) && i ==- 1);
+
+	//board();
+	//cout << "i" <<i;
+
+	if(i == -1){
+		//printf("Alguem travou jogo\n");
+	}else if(i==1){
+		//cout<<"Player "<<player+1<<" win "<<endl;
+		(*p[player]).add2Fitness(250);			
+	}else{
+		//cout<<"Deu velha"<<endl;
+	}
+
+	//printf("Cabou gamer\n");
+	//printf("%f %f\n", p[0].getFitness(),p[1].getFitness());
+
+	for(int i = 1; i <= 9; i++){
+		square[i] = '0' + i;
+	}
+	return 0;
+}
+
+/* IA Game */
+bool game(Ind p, bool *sensor, int n_sensors, unsigned int secs){
 	int player = 0,i,choice;
 	char mark;
 	
 	for(int i = 0 ; i < n_sensors; i ++) sensor[i] = 0; /* Zeroing sensor */
-	
+	for(int i = 1; i <= 9; i++)	square[i] = '0' + i;
+
 	unsigned int retTime = time(0) + secs;   // Get finishing time.
     while (time(0) < retTime);               // Loop until it arrives.
 
 	do{
-		printf("Player [%d] choice %d\n", (player+1),choice);
 		board();
 		player %= 2;
 
 		printf("Player [%d]: Choose a valid position in the board.\n", (player+1));
-		choice = p[player].choice();
-
+		if(!player) scanf("%d",&choice);
+		else{
+			choice = p.choice();
+		}
 		printf("Player [%d] choice %d\n", (player+1),choice);
 
 		mark = (!player) ? 'X' : 'O'; 
 
 		if(isdigit(square[choice])){
 			square[choice] = mark;
-			sensor[player][choice] = true;
-			sensor[player][18] = false;
-			sensor[player][19] = false;
+			if(player){
+				sensor[choice] = true;
+			}else{
+				sensor[8+choice] = true;
+			}
+			player++;
+			player %= 2;
 			
 		}
 		else{
 			
-			p[player].add2Fitness(-1);			
-			sensor[player][18] = true;
-			sensor[player][19] = true;
-			
-			cout<<"Invalid move ";
+			if(player){
+				sensor[17+choice] = true;	
+			}
 
-			player--;
-			
+
+			cout<<"INVALID MOVE :: Press 1 to quit\n";
+			int n;
+			scanf("%d",&n);
+			if(n == 1) return false;
 		}
 		i=checkwin();
 
-		player++;
-	}while((time(0) < retTime) && i==-1);
-
+	}while(i==-1);
+	
 	board();
 	
 	if(i == -1){
-		printf("POHA CARAIOOO\n");
+		printf("Naaaada\n");
 	}
 	if(i==1) cout<<"Player "<<--player<<" win ";
 	else

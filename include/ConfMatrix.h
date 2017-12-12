@@ -20,7 +20,7 @@ class ConfMatrix{
 	public:
 		ConfMatrix();
 		ConfMatrix(bool**,int*,int*);
-		//~ConfMatrix();
+		~ConfMatrix();
 
 		/* Methods */
 		void printSensorsValue();

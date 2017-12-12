@@ -7,6 +7,7 @@
 
 using namespace std;
 
-bool game(vector<Ind>,bool**,int,unsigned int);
+bool tictactoe(vector<Ind*>,vector<bool*>,int, float);
+bool game(Ind,bool*,int,unsigned int);
 
 #endif

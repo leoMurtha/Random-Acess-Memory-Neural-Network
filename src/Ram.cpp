@@ -9,6 +9,10 @@
 
 Ram::Ram(){};
 
+Ram::~Ram(){
+	
+};
+
 Ram::Ram(ConfMatrix matrix, int nKlasses){
 	this->matrix = matrix;
 	this->nKlasses = nKlasses;
@@ -26,15 +30,17 @@ Ram::Ram(ConfMatrix matrix, int nKlasses){
 
 };
 
+int Ram::getKlasses(){return this->nKlasses;}
+
 int Ram::getAction(){
-	int action = -1;
-	int max = INT_MIN;
+	int adder,action = -1,max = INT_MIN;
 
 	for(int i = 0; i < nKlasses; i++){
-		if(klass[i].adder() > max){
-			max = klass[i].adder();
+		adder = klass[i].adder();
+		if(adder > max){
+			max = adder;
 			action = i+1;
-		} 
+		}	 
 	}
 
 	return action;
