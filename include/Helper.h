@@ -6,4 +6,6 @@ int power2(int);
 
 int randomInt(int);
 
+bool **link2Sensor(bool*,int);
+
 #endif

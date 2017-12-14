@@ -12,14 +12,16 @@ class Wizard{
 		int n_neurons;
 		int n_sensors;
 		int n_receptors;
+		
+	public:
 		Neuron *neuron; /* Neurons of the group */
 	
-	public:
 		Wizard();
 		Wizard(int,int,int); /* Uses nsensor,nneurons and nreceptors*/
-		//~Wizard();
+		~Wizard();
 		void connectStoR(M*); /* Connect sensors to receptors */
-
+		int adder(); /* adds the adressed locs */
+		int getNneurons();
 };
 
 #endif

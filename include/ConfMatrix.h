@@ -6,6 +6,7 @@ using namespace std;
 
 typedef struct mat{
 	vector <bool*> v;
+	int *ids; /* Indexes to sensors, used in replaceSensors */
 }M;
 
 /* Sparse matrix */
@@ -19,15 +20,16 @@ class ConfMatrix{
 	public:
 		ConfMatrix();
 		ConfMatrix(bool**,int*,int*);
-		//~ConfMatrix();
+		~ConfMatrix();
 
 		/* Methods */
 		void printSensorsValue();
 		int getNsensors();
 		int getNneurons();
 		int getNreceptors();
-		
-	
+		M *getLines();
+		void replaceSensors(bool**);
+
 };
 
 #endif

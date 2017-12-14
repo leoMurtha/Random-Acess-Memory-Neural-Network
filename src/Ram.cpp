@@ -5,8 +5,13 @@
 #include <Neuron.h>
 #include <ConfMatrix.h>
 #include <vector>
+#include <limits.h>
 
 Ram::Ram(){};
+
+Ram::~Ram(){
+	
+};
 
 Ram::Ram(ConfMatrix matrix, int nKlasses){
 	this->matrix = matrix;
@@ -24,3 +29,19 @@ Ram::Ram(ConfMatrix matrix, int nKlasses){
 	}	
 
 };
+
+int Ram::getKlasses(){return this->nKlasses;}
+
+int Ram::getAction(){
+	int adder,action = -1,max = INT_MIN;
+
+	for(int i = 0; i < nKlasses; i++){
+		adder = klass[i].adder();
+		if(adder > max){
+			max = adder;
+			action = i+1;
+		}	 
+	}
+
+	return action;
+}

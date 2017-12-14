@@ -11,15 +11,16 @@ class Ram{
 	private:
 		int nKlasses; /* Number of klasses int the current net */
 		ConfMatrix matrix; /* Confection matrix */
+		
+	public:
 		Wizard *klass; /* Classes of the neural net */
 
-	public:
 		Ram();
-		Ram(ConfMatrix);
-		//~Ram();
-		void connectStoR(bool*); /* Connect sensors to receptors */
-
-	
-};
+		Ram(ConfMatrix, int);
+		~Ram();
+		
+		int getAction(); /* Runs a winnerTakesAll and returns the action */
+		int getKlasses();
+};	
 
 #endif
