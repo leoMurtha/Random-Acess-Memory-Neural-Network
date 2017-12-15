@@ -11,10 +11,10 @@
 #include <ctime>
 #include <limits.h>
 
-#define GEN_SIZE 1000000
+#define GEN_SIZE 5000
 #define POP_SIZE 100
 #define PRED_RATE (int) (GEN_SIZE*0.001) /* 1% of the GEN SIZE */
-#define GAME_TIME 0.01f
+#define GAME_TIME 0.001f
  
 using namespace std;
 
