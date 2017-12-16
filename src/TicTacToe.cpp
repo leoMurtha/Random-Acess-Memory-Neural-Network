@@ -35,7 +35,7 @@ bool tictactoe(vector<Ind*> p, vector<bool*> sensor, int n_sensors, float ms){
 		mark = (!player) ? 'X' : 'O'; 
 
 		if(isdigit(square[choice])){
-			(*p[player]).add2Fitness(24);			
+			(*p[player]).add2Fitness(133);			
 			square[choice] = mark;
 			sensor[player][choice] = true;
 			player++;
@@ -44,16 +44,17 @@ bool tictactoe(vector<Ind*> p, vector<bool*> sensor, int n_sensors, float ms){
 		}
 		else{
 			
-			(*p[player]).add2Fitness(-36);			
+			(*p[player]).add2Fitness(-200);			
 			
 			//printf("Player [%d] choice %d\n", (player+1),choice);
 
 			//cout<<"Invalid move \n";
 
 			//printf("->%d\n", 17+choice);
-			sensor[player][17+choice] = true;
 			
-			
+			if(sensor[player][17+choice]){
+				sensor[player][26+choice] = true;
+			}else  sensor[player][17+choice] = true;    
 		}
 		i=checkwin();
 		clock_t end = clock();
@@ -68,7 +69,7 @@ bool tictactoe(vector<Ind*> p, vector<bool*> sensor, int n_sensors, float ms){
 		//printf("Alguem travou jogo\n");
 	}else if(i==1){
 		//cout<<"Player "<<player+1<<" win "<<endl;
-		(*p[player]).add2Fitness(250);			
+		(*p[player]).add2Fitness(1000);			
 	}else{
 		//cout<<"Deu velha"<<endl;
 	}
@@ -98,7 +99,7 @@ bool game(Ind p, bool *sensor, int n_sensors, unsigned int secs){
 		player %= 2;
 
 		printf("Player [%d]: Choose a valid position in the board.\n", (player+1));
-		if(!player) scanf("%d",&choice);
+		if(player) scanf("%d",&choice);
 		else{
 			choice = p.choice();
 		}
@@ -108,7 +109,7 @@ bool game(Ind p, bool *sensor, int n_sensors, unsigned int secs){
 
 		if(isdigit(square[choice])){
 			square[choice] = mark;
-			if(player){
+			if(!player){
 				sensor[choice] = true;
 			}else{
 				sensor[8+choice] = true;
@@ -119,8 +120,10 @@ bool game(Ind p, bool *sensor, int n_sensors, unsigned int secs){
 		}
 		else{
 			
-			if(player){
-				sensor[17+choice] = true;	
+			if(!player){
+				if(sensor[17+choice]){
+					sensor[26+choice] = true;
+				}else  sensor[17+choice] = true;
 			}
 
 
@@ -200,18 +203,18 @@ void board(){
 
 	printf("Player [1] (X) - Player [2] (0)\n\n");
 	
-	cout << "     |     |     " << endl;
-	cout << "  " << square[1] << "  |  " << square[2] << "  |  " << square[3] << endl;
+	cout << "\t     |     |     " << endl;
+	cout << "\t  " << square[1] << "  |  " << square[2] << "  |  " << square[3] << endl;
 
-	cout << "_____|_____|_____" << endl;
-	cout << "     |     |     " << endl;
+	cout << "\t_____|_____|_____" << endl;
+	cout << "\t     |     |     " << endl;
 
-	cout << "  " << square[4] << "  |  " << square[5] << "  |  " << square[6] << endl;
+	cout << "\t  " << square[4] << "  |  " << square[5] << "  |  " << square[6] << endl;
 
-	cout << "_____|_____|_____" << endl;
-	cout << "     |     |     " << endl;
+	cout << "\t_____|_____|_____" << endl;
+	cout << "\t     |     |     " << endl;
 
-	cout << "  " << square[7] << "  |  " << square[8] << "  |  " << square[9] << endl;
+	cout << "\t  " << square[7] << "  |  " << square[8] << "  |  " << square[9] << endl;
 
-	cout << "     |     |     " << endl << endl;
+	cout << "\t     |     |     " << endl << endl;
 }

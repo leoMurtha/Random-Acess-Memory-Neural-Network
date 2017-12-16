@@ -13,7 +13,7 @@
 
 #define GEN_SIZE 5000
 #define POP_SIZE 100
-#define PRED_RATE (int) (GEN_SIZE*0.001) /* 1% of the GEN SIZE */
+#define PRED_RATE (int) (GEN_SIZE*0.01) /* x% of the GEN SIZE */
 #define GAME_TIME 0.001f
  
 using namespace std;
@@ -21,32 +21,34 @@ using namespace std;
 Ind b1,b2,w1,w2;
 
 /* Mutates de DNA */
-void mutation(Ind *pop){
+void mutation(Ind *pop, int best){
 	Ram *normal;
 	int nNeurons = pop[0].getBrain()->klass[0].getNneurons();
 	int nKlasses = pop[0].getBrain()->getKlasses();
 	int n = pop[0].getBrain()->klass[0].neuron[0].getN();
 
 	for(int i = 0; i < POP_SIZE; i++){
-		normal =  pop[i].getBrain();
-		for(int j = 0; j < nKlasses; j++){
-			for(int k = 0; k < nNeurons; k++){
-				int nRand = randomInt(100);
-				if(nRand > 50 && nRand < 70) nRand = 2;
-				else if(nRand >= 70 && nRand <= 90) nRand = 3;
-				else if(nRand > 90 && nRand <= 100) nRand = 5;				
-				else if(nRand <= 50) nRand = 1;
-				
-				for(int t = 0; t < nRand; t++){
-					/* Giving more chance to the gene of the best */
-					int loc = randomInt(n);
-					if(normal->klass[j].neuron[k].chromo[loc] == true){
-						normal->klass[j].neuron[k].chromo[loc] = false;
-					}else normal->klass[j].neuron[k].chromo[loc] = true;
+		if(i != best){
+			normal =  pop[i].getBrain();
+			for(int j = 0; j < nKlasses; j++){
+				for(int k = 0; k < nNeurons; k++){
+					int nRand = randomInt(100);
+					if(nRand > 50 && nRand < 70) nRand = 2;
+					else if(nRand >= 70 && nRand <= 90) nRand = 3;
+					else if(nRand > 90 && nRand <= 100) nRand = 5;				
+					else if(nRand <= 50) nRand = 1;
+					
+					for(int t = 0; t < nRand; t++){
+						/* Giving more chance to the gene of the best */
+						int loc = randomInt(n);
+						if(normal->klass[j].neuron[k].chromo[loc] == true){
+							normal->klass[j].neuron[k].chromo[loc] = false;
+						}else normal->klass[j].neuron[k].chromo[loc] = true;
+					}
+					
 				}
-				
 			}
-		}
+		}	
 	}
 }
 
@@ -62,7 +64,7 @@ Ind roullete(Ind *pop, int popSum, int k){
 			return pop[i];
 		}
 	}
-	if(k) return b2;
+	if(k == 1) return b2;
 
 	return b1;
 }
@@ -76,16 +78,18 @@ void crossover(Ind *pop, Ind selected){
 	int n = selectedBrain->klass[0].neuron[0].getN();
 
 	for(int i = 0; i < POP_SIZE; i++){
-		normal = pop[i].getBrain();
-		for(int j = 0; j < nKlasses; j++){
-			for(int k = 0; k < nNeurons; k++){
-				for(int t = 0; t < n; t++){
-					/* Giving more chance to the gene of the selected */
-					if(randomInt(100) <= 65){
-						normal->klass[j].neuron[k].chromo[t] = selectedBrain->klass[j].neuron[k].chromo[t]; 
+		if(i != selected.getId()){
+			normal = pop[i].getBrain();
+			for(int j = 0; j < nKlasses; j++){
+				for(int k = 0; k < nNeurons; k++){
+					for(int t = 0; t < n; t++){
+						/* Giving more chance to the gene of the selected */
+						if(randomInt(100) <= 70){
+							normal->klass[j].neuron[k].chromo[t] = selectedBrain->klass[j].neuron[k].chromo[t]; 
+						}
 					}
+					
 				}
-				
 			}
 		}
 	}
@@ -100,11 +104,11 @@ Ind *createPop(ConfMatrix matrix, int n_klasses){
 	return pop;	
 }
 
-int n_sensors = 28,n_neurons = 4,n_klasses = 9; /* Ram parameters */
+int n_sensors = 36,n_neurons = 6,n_klasses = 9; /* Ram parameters */
 
 int main(int argc, char const *argv[]){
-	FILE *log1 = fopen("5kT1.csv","w+");
-	FILE *log2 = fopen("5kT2.csv","w+");
+	FILE *log1 = fopen("5k1.csv","w+");
+	FILE *log2 = fopen("5k2.csv","w+");
 	/* Population init */
 	vector<Ind*> pop = vector<Ind*>(); /* Populations */ 
 	vector<Ind*> p; /* Where to put 2 player that will play against each other */ 
@@ -116,10 +120,12 @@ int main(int argc, char const *argv[]){
 	bool **psensor2 = link2Sensor(sensor2,n_sensors); /* Getting adresses for the sensors */
 	/* ------------- */	
 	printf("RAM TicTacToe\n");
-	fprintf(log1, "Generation,Fitness\n");
-	fprintf(log2, "Generation,Fitness\n");
+	fprintf(log1, "Generation,Fitness,Worst,Mean\n");
+	fprintf(log2, "Generation,Fitness,Worst,Mean\n");
 	srand(time(NULL));
 	
+	printf("Irá demorar aproxidamente %.1f segundos.\n", GEN_SIZE*GAME_TIME*POP_SIZE);
+
 	/* Making the matrix */
 	ConfMatrix matrix(psensor,&n_sensors,&n_neurons);
 	pop.push_back(createPop(matrix,n_klasses));
@@ -142,9 +148,11 @@ int main(int argc, char const *argv[]){
 
 	int ri,rj,sum1,sum2;
 	bool mi[POP_SIZE],mj[POP_SIZE];
+	float mean1,mean2;
 	
 	for(int k = 1; k <= GEN_SIZE; k++){
 		sum1 = sum2 = 0;
+		mean1 = mean2 = 0;
 
 		for(int l = 0 ; l < POP_SIZE; l++){
 			mi[l] = false;
@@ -181,8 +189,12 @@ int main(int argc, char const *argv[]){
 			else if(pop[1][rj].getFitness() < w2.getFitness()) w2 = pop[1][rj]; 
 
 			/*----Roullete Wheel Selection: Getting the sum ------*/
-			sum1 += abs(pop[0][ri].getFitness());
-			sum2 += abs(pop[1][rj].getFitness()); 
+			//sum1 += abs(pop[0][ri].getFitness());
+			//sum2 += abs(pop[1][rj].getFitness()); 
+			
+			mean1 += pop[0][ri].getFitness()/POP_SIZE;
+			mean2 += pop[1][rj].getFitness()/POP_SIZE;
+			
 		}
 		
 		/* Predation */
@@ -194,16 +206,16 @@ int main(int argc, char const *argv[]){
 		}
 		
 		/*Logging the best of pop2 */
-		fprintf(log2,"%d , %.3f\n",k,b2.getFitness());
+		fprintf(log2,"%d , %.3f, %.3f, %.3f\n",k,b2.getFitness(),w2.getFitness(),mean2);
 			
 		/*Logging the best of pop1 */
-		fprintf(log1,"%d , %.3f\n",k,b1.getFitness());
+		fprintf(log1,"%d , %.3f, %.3f, %.3f\n",k,b1.getFitness(),w1.getFitness(),mean1);
 
 		/* Crossover : Wheel individual does all */
-		wheelInd = roullete(pop[0],sum1,0);
-		crossover(pop[0],wheelInd);
-		wheelInd = roullete(pop[1],sum2,1);
-		crossover(pop[1],wheelInd);
+		//wheelInd = roullete(pop[0],sum1,0);
+		//crossover(pop[0],wheelInd);
+		//wheelInd = roullete(pop[1],sum2,1);
+		//crossover(pop[1],wheelInd);
 		
 		/* Intraspecies */
 		/*if(!(k % PRED_RATE*10)){
@@ -217,13 +229,13 @@ int main(int argc, char const *argv[]){
 		}else{*/
 			
 		/* Crossover : best does all */
-		//crossover(pop[0],b1);
-		//crossover(pop[1],b2);
+		crossover(pop[0],b1);
+		crossover(pop[1],b2);
 
 		
 		/* Mutation */
-		mutation(pop[0]);
-		mutation(pop[1]);
+		mutation(pop[0],b1.getId());
+		mutation(pop[1],b2.getId());
 
 		/* Zeroing fitness so they can be evaluated again */
 		for(int l = 0; l < POP_SIZE; l++){
